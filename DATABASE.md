@@ -1,6 +1,6 @@
 # Database Setup Guide
 
-This project uses Prisma ORM with PostgreSQL for data persistence.
+This project uses Prisma ORM with MongoDB for data persistence.
 
 ## Quick Start
 
@@ -19,28 +19,36 @@ This project uses Prisma ORM with PostgreSQL for data persistence.
 
 3. **Choose your database option**:
 
-### Option 1: Local PostgreSQL (Recommended for development)
+### Option 1: Local MongoDB (Recommended for development)
 
-1. Install PostgreSQL locally
-2. Create a database:
-   ```sql
-   CREATE DATABASE recipe_organizer;
+1. Install MongoDB locally or use Docker:
+   ```bash
+   # Using Docker
+   docker run --name mongodb -p 27017:27017 -d mongo:latest
+   
+   # Or install locally from: https://www.mongodb.com/try/download/community
    ```
-3. Update your `.env` file:
+
+2. Update your `.env` file:
    ```
-   DATABASE_URL="postgresql://postgres:password@localhost:5432/recipe_organizer"
+   DATABASE_URL="mongodb://localhost:27017/recipe_organizer"
    ```
 
 ### Option 2: Cloud Database (Recommended for production)
 
 Choose one of these cloud providers:
 
-- **Supabase** (Free tier available): https://supabase.com/
-- **Railway** (Free tier available): https://railway.app/
-- **Neon** (Free tier available): https://neon.tech/
-- **PlanetScale** (MySQL): https://planetscale.com/
+- **MongoDB Atlas** (Free tier available): https://www.mongodb.com/atlas
+- **Railway** (MongoDB add-on): https://railway.app/
+- **DigitalOcean** (Managed MongoDB): https://www.digitalocean.com/products/managed-databases-mongodb
 
 Update your `.env` file with the connection string provided by your chosen service.
+
+#### MongoDB Atlas Setup:
+1. Create a free cluster at https://www.mongodb.com/atlas
+2. Create a database user
+3. Whitelist your IP address
+4. Get connection string: `mongodb+srv://username:password@cluster.mongodb.net/recipe_organizer?retryWrites=true&w=majority`
 
 ## Database Operations
 
@@ -50,16 +58,18 @@ Update your `.env` file with the connection string provided by your chosen servi
 npm run db:generate
 ```
 
-### Push schema to database (for development)
+### Push schema to database
+
+Since MongoDB doesn't use migrations, we use db push to sync the schema:
 
 ```bash
 npm run db:push
 ```
 
-### Create and run migrations (for production)
+### Reset database (removes all data)
 
 ```bash
-npm run db:migrate
+npm run db:reset
 ```
 
 ### Seed the database with sample data
@@ -78,7 +88,7 @@ npm run db:studio
 
 ### Recipe Model
 
-- `id`: Unique identifier (CUID)
+- `id`: Unique identifier (MongoDB ObjectId)
 - `title`: Recipe name
 - `description`: Brief description
 - `cookTime`: Cooking time in minutes

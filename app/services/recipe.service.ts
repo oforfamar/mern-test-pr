@@ -11,10 +11,11 @@ export class RecipeService {
     const where: Prisma.RecipeWhereInput = {};
 
     if (filters?.search) {
+      // MongoDB text search - using contains which works with MongoDB
       where.OR = [
         { title: { contains: filters.search, mode: "insensitive" } },
         { description: { contains: filters.search, mode: "insensitive" } },
-        { tags: { hasSome: [filters.search] } },
+        { tags: { has: filters.search } }, // MongoDB: use 'has' for single value in array
       ];
     }
 
@@ -23,6 +24,7 @@ export class RecipeService {
     }
 
     if (filters?.tags && filters.tags.length > 0) {
+      // MongoDB: use 'hasSome' for multiple values
       where.tags = { hasSome: filters.tags };
     }
 
@@ -143,9 +145,7 @@ export class RecipeService {
       select: { tags: true },
     });
 
-    const allTags = recipes.flatMap(
-      (recipe: { tags: string[] }) => recipe.tags
-    );
+    const allTags = recipes.flatMap((recipe: { tags: string[] }) => recipe.tags);
     return [...new Set(allTags)].sort();
   }
 

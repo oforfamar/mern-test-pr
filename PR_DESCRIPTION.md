@@ -1,20 +1,20 @@
-# Add Database Integration with Prisma ORM
+# Add Database Integration with Prisma ORM and MongoDB
 
-This PR introduces persistent data storage using Prisma ORM with PostgreSQL, replacing the in-memory recipe storage with a robust database solution.
+This PR introduces persistent data storage using Prisma ORM with MongoDB, replacing the in-memory recipe storage with a robust NoSQL database solution.
 
 ## 🚀 What's New
 
 ### Database Integration
 
-- **Prisma ORM** setup with PostgreSQL
-- **Database schema** for Recipe model with proper typing
-- **Migration system** for database version control
+- **Prisma ORM** setup with MongoDB
+- **Database schema** for Recipe model with proper typing and ObjectId support
+- **Schema synchronization** using db push (no migrations needed with MongoDB)
 - **Seed data** with sample recipes for development
 
 ### Service Layer Architecture
 
 - **RecipeService** class with comprehensive CRUD operations
-- **Filtering capabilities** (search, difficulty, tags, cook time)
+- **MongoDB-optimized filtering** (search, difficulty, tags, cook time)
 - **Data aggregation methods** (statistics, unique tags)
 - **Proper error handling** with Prisma error types
 
@@ -48,7 +48,7 @@ This PR introduces persistent data storage using Prisma ORM with PostgreSQL, rep
 
 ```prisma
 model Recipe {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String
   description  String
   cookTime     Int
@@ -60,6 +60,8 @@ model Recipe {
   instructions String[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@map("recipes")
 }
 
 enum Difficulty {
@@ -76,6 +78,7 @@ enum Difficulty {
 - **Data aggregation**: Get statistics and unique tags
 - **Type safety**: Full TypeScript integration with Prisma types
 - **Error handling**: Proper handling of database errors and edge cases
+- **MongoDB optimization**: Uses appropriate query patterns for NoSQL
 
 ### Development Workflow
 
@@ -127,23 +130,23 @@ After this PR is merged:
 
 ### Environment Variables
 
-- `DATABASE_URL`: PostgreSQL connection string (required)
+- `DATABASE_URL`: MongoDB connection string (required)
 - `NODE_ENV`: Environment setting for connection pooling
 
 ### Production Checklist
 
-- [ ] Set up production PostgreSQL database
+- [ ] Set up production MongoDB database
 - [ ] Configure DATABASE_URL environment variable
-- [ ] Run `npx prisma migrate deploy` for migrations
+- [ ] Run `npx prisma db push` to sync schema
 - [ ] Generate Prisma client in production build
 - [ ] Consider connection pooling for high traffic
 
 ### Cloud Database Options
 
-- **Supabase**: Full-featured PostgreSQL with real-time capabilities
-- **Railway**: Simple deployment with PostgreSQL add-on
-- **Neon**: Serverless PostgreSQL with branching
-- **PlanetScale**: MySQL alternative with scaling features
+- **MongoDB Atlas**: Full-featured MongoDB with global clusters and real-time capabilities
+- **Railway**: Simple deployment with MongoDB add-on
+- **DigitalOcean**: Managed MongoDB databases
+- **AWS DocumentDB**: MongoDB-compatible database service
 
 ## 🔍 Code Review Points
 
