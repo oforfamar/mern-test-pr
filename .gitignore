@@ -85,3 +85,5 @@ Thumbs.db
 .react-router/
 
 .features-gen/
+
+/generated/prisma
