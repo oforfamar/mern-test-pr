@@ -82,6 +82,3 @@ Thumbs.db
 
 # Testing
 .vitest/
-.react-router/
-
-.features-gen/
