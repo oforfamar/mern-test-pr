@@ -5,12 +5,14 @@ This project uses Prisma ORM with PostgreSQL for data persistence.
 ## Quick Start
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Set up environment variables**:
    Copy `.env.example` to `.env` and update the `DATABASE_URL`:
+
    ```bash
    cp .env.example .env
    ```
@@ -43,26 +45,31 @@ Update your `.env` file with the connection string provided by your chosen servi
 ## Database Operations
 
 ### Generate Prisma Client
+
 ```bash
 npm run db:generate
 ```
 
 ### Push schema to database (for development)
+
 ```bash
 npm run db:push
 ```
 
 ### Create and run migrations (for production)
+
 ```bash
 npm run db:migrate
 ```
 
 ### Seed the database with sample data
+
 ```bash
 npm run db:seed
 ```
 
 ### Open Prisma Studio (Database GUI)
+
 ```bash
 npm run db:studio
 ```
@@ -70,6 +77,7 @@ npm run db:studio
 ## Schema Overview
 
 ### Recipe Model
+
 - `id`: Unique identifier (CUID)
 - `title`: Recipe name
 - `description`: Brief description
@@ -113,15 +121,18 @@ The `RecipeService` class provides methods for:
 ## Troubleshooting
 
 ### Connection Issues
+
 - Ensure your database server is running
 - Check your `DATABASE_URL` format
 - Verify firewall/network settings for cloud databases
 
 ### Migration Issues
+
 - Use `npx prisma db push` for development
 - Use `npx prisma migrate reset` to reset development database
 - Use `npx prisma migrate resolve` to mark migrations as applied
 
 ### Client Generation Issues
+
 - Run `npm run db:generate` after schema changes
 - Restart your development server after generating client

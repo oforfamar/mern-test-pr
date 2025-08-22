@@ -1,7 +1,7 @@
-import { prisma } from '../lib/db.server.js';
-import type { Recipe, NewRecipe, RecipeFilters } from '../types/recipe.js';
-import type { Prisma } from '../../generated/prisma/index.js';
-import { PrismaClientKnownRequestError } from '../../generated/prisma/runtime/library.js';
+import { prisma } from "../lib/db.server.js";
+import type { Recipe, NewRecipe, RecipeFilters } from "../types/recipe.js";
+import type { Prisma } from "../../generated/prisma/index.js";
+import { PrismaClientKnownRequestError } from "../../generated/prisma/runtime/library.js";
 
 export class RecipeService {
   /**
@@ -12,8 +12,8 @@ export class RecipeService {
 
     if (filters?.search) {
       where.OR = [
-        { title: { contains: filters.search, mode: 'insensitive' } },
-        { description: { contains: filters.search, mode: 'insensitive' } },
+        { title: { contains: filters.search, mode: "insensitive" } },
+        { description: { contains: filters.search, mode: "insensitive" } },
         { tags: { hasSome: [filters.search] } },
       ];
     }
@@ -32,7 +32,7 @@ export class RecipeService {
 
     const recipes = await prisma.recipe.findMany({
       where,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     return recipes.map(this.mapPrismaRecipeToRecipe);
@@ -77,26 +77,38 @@ export class RecipeService {
   /**
    * Update an existing recipe
    */
-  static async updateRecipe(id: string, updateData: Partial<NewRecipe>): Promise<Recipe | null> {
+  static async updateRecipe(
+    id: string,
+    updateData: Partial<NewRecipe>
+  ): Promise<Recipe | null> {
     try {
       const recipe = await prisma.recipe.update({
         where: { id },
         data: {
           ...(updateData.title && { title: updateData.title }),
-          ...(updateData.description && { description: updateData.description }),
+          ...(updateData.description && {
+            description: updateData.description,
+          }),
           ...(updateData.cookTime && { cookTime: updateData.cookTime }),
           ...(updateData.servings && { servings: updateData.servings }),
           ...(updateData.difficulty && { difficulty: updateData.difficulty }),
           ...(updateData.tags && { tags: updateData.tags }),
-          ...(updateData.ingredients && { ingredients: updateData.ingredients }),
-          ...(updateData.instructions && { instructions: updateData.instructions }),
+          ...(updateData.ingredients && {
+            ingredients: updateData.ingredients,
+          }),
+          ...(updateData.instructions && {
+            instructions: updateData.instructions,
+          }),
           ...(updateData.image !== undefined && { image: updateData.image }),
         },
       });
 
       return this.mapPrismaRecipeToRecipe(recipe);
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
         return null; // Record not found
       }
       throw error;
@@ -113,7 +125,10 @@ export class RecipeService {
       });
       return true;
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
         return false; // Record not found
       }
       throw error;
@@ -128,7 +143,9 @@ export class RecipeService {
       select: { tags: true },
     });
 
-    const allTags = recipes.flatMap((recipe: { tags: string[] }) => recipe.tags);
+    const allTags = recipes.flatMap(
+      (recipe: { tags: string[] }) => recipe.tags
+    );
     return [...new Set(allTags)].sort();
   }
 
@@ -141,7 +158,7 @@ export class RecipeService {
       _avg: { cookTime: true },
     });
     const difficultyDistribution = await prisma.recipe.groupBy({
-      by: ['difficulty'],
+      by: ["difficulty"],
       _count: { difficulty: true },
     });
 
@@ -165,7 +182,7 @@ export class RecipeService {
       description: prismaRecipe.description,
       cookTime: prismaRecipe.cookTime,
       servings: prismaRecipe.servings,
-      image: prismaRecipe.image || '',
+      image: prismaRecipe.image || "",
       difficulty: prismaRecipe.difficulty,
       tags: prismaRecipe.tags,
       ingredients: prismaRecipe.ingredients,
