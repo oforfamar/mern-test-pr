@@ -145,7 +145,9 @@ export class RecipeService {
       select: { tags: true },
     });
 
-    const allTags = recipes.flatMap((recipe: { tags: string[] }) => recipe.tags);
+    const allTags = recipes.flatMap(
+      (recipe: { tags: string[] }) => recipe.tags
+    );
     return [...new Set(allTags)].sort();
   }
 

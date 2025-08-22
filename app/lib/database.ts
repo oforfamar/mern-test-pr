@@ -4,16 +4,19 @@
 
 export const DATABASE_CONFIG = {
   development: {
-    provider: 'mongodb',
-    url: process.env.DATABASE_URL || 'mongodb://localhost:27017/recipe_organizer',
+    provider: "mongodb",
+    url:
+      process.env.DATABASE_URL || "mongodb://localhost:27017/recipe_organizer",
   },
   production: {
-    provider: 'mongodb',
+    provider: "mongodb",
     url: process.env.DATABASE_URL,
   },
   test: {
-    provider: 'mongodb',
-    url: process.env.TEST_DATABASE_URL || 'mongodb://localhost:27017/recipe_organizer_test',
+    provider: "mongodb",
+    url:
+      process.env.TEST_DATABASE_URL ||
+      "mongodb://localhost:27017/recipe_organizer_test",
   },
 };
 

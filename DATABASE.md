@@ -22,10 +22,11 @@ This project uses Prisma ORM with MongoDB for data persistence.
 ### Option 1: Local MongoDB (Recommended for development)
 
 1. Install MongoDB locally or use Docker:
+
    ```bash
    # Using Docker
    docker run --name mongodb -p 27017:27017 -d mongo:latest
-   
+
    # Or install locally from: https://www.mongodb.com/try/download/community
    ```
 
@@ -45,6 +46,7 @@ Choose one of these cloud providers:
 Update your `.env` file with the connection string provided by your chosen service.
 
 #### MongoDB Atlas Setup:
+
 1. Create a free cluster at https://www.mongodb.com/atlas
 2. Create a database user
 3. Whitelist your IP address
